@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
-@DynamoDBTable(tableName = "Size")
+@DynamoDBTable(tableName = "product_size")
 @Setter
 public class Size {
 

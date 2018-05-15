@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 @Setter
-@DynamoDBTable(tableName = "Product")
+@DynamoDBTable(tableName = "product")
 public class Product {
 
     private String productId;

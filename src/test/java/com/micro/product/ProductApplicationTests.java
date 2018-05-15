@@ -37,14 +37,14 @@ public class ProductApplicationTests {
 
         dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
 
-        amazonDynamoDB.deleteTable("Product");
+        amazonDynamoDB.deleteTable("Size");
     }
 
     @Test
     public void setupTable(){
         dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
 
-        CreateTableRequest tableRequest = dynamoDBMapper.generateCreateTableRequest(Product.class);
+        CreateTableRequest tableRequest = dynamoDBMapper.generateCreateTableRequest(Size.class);
         tableRequest.setProvisionedThroughput(new ProvisionedThroughput(1L, 1L));
 
 //        CreateTableRequest tableRequest2 = dynamoDBMapper.generateCreateTableRequest(Size.class);

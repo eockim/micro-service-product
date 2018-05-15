@@ -6,8 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface SizeRepository extends CrudRepository<Size, String> {
+@EnableScan
+public interface ProductSizeRepository extends CrudRepository<Size, String> {
 
-    @Override
-    Optional<Size> findById(String s);
 }

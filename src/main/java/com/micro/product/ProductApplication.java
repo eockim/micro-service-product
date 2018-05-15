@@ -5,6 +5,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.micro.product.entity.Product;
+import com.micro.product.entity.Size;
+import com.micro.product.repository.ProductSizeRepository;
+import com.micro.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +19,12 @@ public class ProductApplication {
 
 //    @Autowired
 //    ProductRepository productRepository;
+
+    @Autowired
+    ProductService productService;
+
+    @Autowired
+    ProductSizeRepository productSizeRepository;
 
     @Autowired
     private AmazonDynamoDB amazonDynamoDB;
@@ -34,12 +43,18 @@ public class ProductApplication {
         return "done";
     }
 
-    @GetMapping("/product/save")
+    @GetMapping("/product/size")
     public String saveProduct(){
 
 
-        //productRepository.save(new Product("1","1","2","3", true,"4","5"));
-        return "done";
+        String result = "";
+        Iterable<Size> customers = productSizeRepository.findAll();
+
+        for (Size cust : customers) {
+            result += cust.toString() + "<br>";
+        }
+
+        return result;
     }
 
 //    @GetMapping("/delete")
