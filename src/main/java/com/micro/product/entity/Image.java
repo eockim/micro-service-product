@@ -9,15 +9,14 @@ import org.springframework.data.annotation.Id;
 
 @Setter
 @NoArgsConstructor
-@DynamoDBTable(tableName = "Image")
+@DynamoDBTable(tableName = "product_image")
 public class Image {
-    @Id
+
     private String productId;
     private String imageType;
     private String name;
     private String path;
     private String size;
-
 
     @DynamoDBHashKey
     public String getProductId() {
