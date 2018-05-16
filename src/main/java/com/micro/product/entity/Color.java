@@ -9,9 +9,9 @@ import org.springframework.data.annotation.Id;
 
 @Setter
 @NoArgsConstructor
-@DynamoDBTable(tableName = "Color")
+@DynamoDBTable(tableName = "product_color")
 public class Color {
-    @Id
+
     private String productId;
     private String colorId;
     private String colorName;

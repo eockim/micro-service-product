@@ -32,42 +32,48 @@ public class ProductApplicationTests {
     private static final String REGISTDATE = "8000";
     private static final String MODIDATE = "8000";
 
+    final ProvisionedThroughput provisionedThroughput = new ProvisionedThroughput(5L, 5L);
+
     @Test
-    public void contextLoads() {
+    public void deleteTables() {
 
         dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
 
-        amazonDynamoDB.deleteTable("Product");
+        amazonDynamoDB.deleteTable("product");
+        amazonDynamoDB.deleteTable("product_category");
+        amazonDynamoDB.deleteTable("product_color");
+        amazonDynamoDB.deleteTable("product_size");
+        amazonDynamoDB.deleteTable("product_image");
+
+
     }
 
     @Test
     public void setupTable(){
         dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
 
-        CreateTableRequest tableRequest = dynamoDBMapper.generateCreateTableRequest(Product.class);
-        tableRequest.setProvisionedThroughput(new ProvisionedThroughput(1L, 1L));
+        CreateTableRequest tableRequest = dynamoDBMapper.generateCreateTableRequest(Size.class);
+        tableRequest.setProvisionedThroughput(provisionedThroughput);
 
-//        CreateTableRequest tableRequest2 = dynamoDBMapper.generateCreateTableRequest(Size.class);
-//        tableRequest.setProvisionedThroughput(new ProvisionedThroughput(1L, 1L));
-//
-//
-//        CreateTableRequest tableRequest3 = dynamoDBMapper.generateCreateTableRequest(Image.class);
-//        tableRequest.setProvisionedThroughput(new ProvisionedThroughput(1L, 1L));
-//
-//s
-//        CreateTableRequest tableRequest4 = dynamoDBMapper.generateCreateTableRequest(Color.class);
-//        tableRequest.setProvisionedThroughput(new ProvisionedThroughput(1L, 1L));
-//
-//        CreateTableRequest tableRequest5 = dynamoDBMapper.generateCreateTableRequest(Category.class);
-//        tableRequest.setProvisionedThroughput(new ProvisionedThroughput(1L, 1L));
+        CreateTableRequest tableRequest2 = dynamoDBMapper.    generateCreateTableRequest(Product.class);
+        tableRequest2.setProvisionedThroughput(provisionedThroughput);
+
+        CreateTableRequest tableRequest3 = dynamoDBMapper.generateCreateTableRequest(Image.class);
+        tableRequest3.setProvisionedThroughput(provisionedThroughput);
+
+        CreateTableRequest tableRequest4 = dynamoDBMapper.generateCreateTableRequest(Color.class);
+        tableRequest4.setProvisionedThroughput(provisionedThroughput);
+
+        CreateTableRequest tableRequest5 = dynamoDBMapper.generateCreateTableRequest(Category.class);
+        tableRequest5.setProvisionedThroughput(provisionedThroughput);
 
 
 
         amazonDynamoDB.createTable(tableRequest);
-//        amazonDynamoDB.createTable(tableRequest2);
-//        amazonDynamoDB.createTable(tableRequest3);
-//        amazonDynamoDB.createTable(tableRequest4);
-//        amazonDynamoDB.createTable(tableRequest5);
+        amazonDynamoDB.createTable(tableRequest2);
+        amazonDynamoDB.createTable(tableRequest3);
+        amazonDynamoDB.createTable(tableRequest4);
+        amazonDynamoDB.createTable(tableRequest5);
 
     }
 
