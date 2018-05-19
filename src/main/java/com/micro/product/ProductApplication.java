@@ -5,31 +5,65 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.micro.product.entity.Product;
-import com.micro.product.entity.Size;
-import com.micro.product.repository.ProductSizeRepository;
+import com.micro.product.entity.key.ProductKey;
 import com.micro.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @SpringBootApplication
 @RestController
 public class ProductApplication {
 
-//    @Autowired
-//    ProductRepository productRepository;
 
     @Autowired
     ProductService productService;
 
     @Autowired
-    ProductSizeRepository productSizeRepository;
-
-    @Autowired
     private AmazonDynamoDB amazonDynamoDB;
 
     private DynamoDBMapper dynamoDBMapper;
+
+    @GetMapping("/products")
+    public Flux<Product> products(){
+
+        return Flux.fromIterable(productService.products());
+
+    }
+
+    @PostMapping("/products")
+    public Mono<Product> crateProducts(@RequestBody Product product){
+
+        return Mono.fromCompletionStage(productService.createProduct(product));
+
+    }
+
+    @PostMapping("/products/createWithArray")
+    public String createArray(){
+
+        return "done";
+
+    }
+
+    @GetMapping("/products/{productId}/{typeId}")
+    public Mono<Product> getProduct(@PathVariable String productId, @PathVariable String typeId){
+        return Mono.fromCompletionStage(productService.product(new ProductKey(productId, typeId)));
+    }
+
+    @PutMapping("/products{productId}/{typeId}")
+    public Mono<Product> updateProduct(@PathVariable String productId, @PathVariable String typeId, @RequestBody Product product){
+        return Mono.fromCompletionStage(productService.updateProduct(new ProductKey(productId, typeId), product));
+    }
+
+    @DeleteMapping("/products/{productId}/{typeId}")
+    public Flux<Product> deleteProduct(@PathVariable String productId, @PathVariable String typeId){
+        return productService.deleteProduct(new ProductKey(productId, typeId));
+
+    }
+
 
     @GetMapping("/product/create")
     public String productCreae(){
@@ -42,70 +76,6 @@ public class ProductApplication {
 
         return "done";
     }
-
-    @GetMapping("/product/size")
-    public String saveProduct(){
-
-
-        String result = "";
-        Iterable<Size> customers = productSizeRepository.findAll();
-
-        for (Size cust : customers) {
-            result += cust.toString() + "<br>";
-        }
-
-        return result;
-    }
-
-//    @GetMapping("/delete")
-//    public String delete() {
-//        repository.deleteAll();
-//        return "Done";
-//    }
-//
-//    @GetMapping("/save")
-//    public String save() {
-//        // save a single Customer
-//        repository.save(new Customer("JSA-1", "Jack", "Smith"));
-//
-//        // save a list of Customers
-////        repository.save(Arrays.asList(new Customer("JSA-2", "Adam", "Johnson"), new Customer("JSA-3", "Kim", "Smith"),
-////                new Customer("JSA-4", "David", "Williams"), new Customer("JSA-5", "Peter", "Davis")));
-//
-//        return "Done";
-//    }
-//
-//    @GetMapping("/findall")
-//    public String findAll() {
-//        String result = "";
-//        Iterable<Customer> customers = repository.findAll();
-//
-//        for (Customer cust : customers) {
-//            result += cust.toString() + "<br>";
-//        }
-//
-//        return result;
-//    }
-//
-//    @GetMapping("/findbyid/{id}")
-//    public String findById(@PathVariable String id) {
-//
-//        String result = "";
-//        result = repository.findById(id).toString();
-//
-//        return result;
-//    }
-//
-//    @GetMapping("/findbylastname/{lastName}")
-//    public String fetchDataByLastName(@PathVariable String lastName) {
-//        String result = "";
-//
-//        for (Customer cust : repository.findByLastName(lastName)) {
-//            result += cust.toString() + "<br>";
-//        }
-//
-//        return result;
-//    }
 
     public static void main(String[] args) {
         SpringApplication.run(ProductApplication.class, args);

@@ -1,8 +1,7 @@
 package com.micro.product.entity;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import com.micro.product.entity.key.ProductKey;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
@@ -10,8 +9,10 @@ import org.springframework.data.annotation.Id;
 @DynamoDBTable(tableName = "product")
 public class Product {
 
-    private String productId;
-    private String typeCode; // 자켓 , 바지 , 셔츠..
+    @Id
+    private ProductKey key;
+    //private String productId;
+    //private String typeCode; // 자켓 , 바지 , 셔츠..
     private String name;
     private String description; // 설명
     private String retailPrice;
@@ -22,10 +23,18 @@ public class Product {
 
     public Product(){}
 
-    @DynamoDBHashKey
-    public String getProductId() {
-        return productId;
+    private Product(ProductKey key, String name, String registDate) {
+        this.key = key;
+        this.name = name;
+        this.registDate = registDate;
     }
+
+    public Product(String productId, String typeId, String name, String lastChange) {
+        this(new ProductKey(productId, typeId), name, lastChange);
+
+    }
+
+
     @DynamoDBAttribute
     public boolean isUse() {
         return use;
@@ -54,8 +63,28 @@ public class Product {
     public String getDescription() {
         return description;
     }
-    @DynamoDBRangeKey
-    public String getTypeCode() {
-        return typeCode;
+
+    @DynamoDBHashKey(attributeName = "productId")
+    public String getProductId() {
+        return (key != null) ? key.getProductId() : null;
+    }
+
+    public void setProductId(String productId) {
+        if (key == null) {
+            key = new ProductKey();
+        }
+        key.setProductId(productId);
+    }
+
+    @DynamoDBRangeKey(attributeName = "typeId")
+    public String getTypeId() {
+        return (key != null) ? key.getTypeId() : null;
+    }
+
+    public void setTypeId(String typeId) {
+        if (key == null) {
+            key = new ProductKey();
+        }
+        key.setTypeId(typeId);
     }
 }
