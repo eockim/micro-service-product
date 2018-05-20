@@ -6,6 +6,7 @@ import com.micro.product.entity.key.ProductKey;
 import com.micro.product.repository.ProductRepository;
 import com.sun.xml.internal.xsom.impl.scd.Iterators;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,6 @@ public class ProductService {
         return CompletableFuture.completedFuture(productRepository.findById(productKey).orElse(new Product()));
     }
 
-    @Async
     public Flux<Product> deleteProduct(ProductKey productKey){
 
         productRepository.deleteById(productKey);
@@ -56,13 +56,18 @@ public class ProductService {
     public CompletableFuture<Product> updateProduct(ProductKey productKey, Product product){
 
         Optional<Product> findProduct = productRepository.findById(productKey);
+
         findProduct
                 .ifPresent(x -> {
+
+                    product.setKey(productKey);
                     productRepository.save(product);
                 });
 
-        return CompletableFuture.completedFuture(findProduct.orElse(new Product()));
+        return CompletableFuture.completedFuture(productRepository.findById(productKey)
+                                                        .orElseThrow(() -> new EmptyResultDataAccessException("요청한 상품이 존재하지 않습니다.", 0)));
     }
+
 
 
 }

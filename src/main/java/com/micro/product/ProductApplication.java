@@ -53,7 +53,7 @@ public class ProductApplication {
         return Mono.fromCompletionStage(productService.product(new ProductKey(productId, typeId)));
     }
 
-    @PutMapping("/products{productId}/{typeId}")
+    @PutMapping("/products/{productId}/{typeId}")
     public Mono<Product> updateProduct(@PathVariable String productId, @PathVariable String typeId, @RequestBody Product product){
         return Mono.fromCompletionStage(productService.updateProduct(new ProductKey(productId, typeId), product));
     }
@@ -64,18 +64,17 @@ public class ProductApplication {
 
     }
 
-
-    @GetMapping("/product/create")
-    public String productCreae(){
-
-        dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
-
-        CreateTableRequest tableRequest = dynamoDBMapper.generateCreateTableRequest(Product.class);
-        tableRequest.setProvisionedThroughput(new ProvisionedThroughput(1L, 1L));
-        amazonDynamoDB.createTable(tableRequest);
-
-        return "done";
-    }
+//    @GetMapping("/product/create")
+//    public String productCreae(){
+//
+//        dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
+//
+//        CreateTableRequest tableRequest = dynamoDBMapper.generateCreateTableRequest(Product.class);
+//        tableRequest.setProvisionedThroughput(new ProvisionedThroughput(1L, 1L));
+//        amazonDynamoDB.createTable(tableRequest);
+//
+//        return "done";
+//    }
 
     public static void main(String[] args) {
         SpringApplication.run(ProductApplication.class, args);
