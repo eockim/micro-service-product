@@ -1,0 +1,36 @@
+amazon:
+  dynamodb:
+    endpoint: http://localhost:8000/
+  aws:
+    accesskey: AKIAIWUWXRAEQZBTJ2YA
+    secretkey: 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
+spring:
+  application:
+    name: product-service
+server:
+  port: 0
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
+info:
+  app:
+    name: product-service
+    description: this is product api
+    version: 1.0
+server:
+  port: 8090
+security:
+  oauth2:
+    client:
+      clientId: bd1c0a783ccdd1c9b9e4
+      clientSecret: 1a9030fbca47a5b2c28e92f19050bb77824b5ad1
+      accessTokenUri: http://localhost:7000/oauth/access_token
+      userAuthorizationUri: http://localhost:7000/oauth/authorize
+      scope: openid profile email
+    resource:
+      #userInfoUri: http://localhost:7000/user/me
+      tokenInfoUri: http://localhost:7000/introspect
+      preferTokenInfo: false
