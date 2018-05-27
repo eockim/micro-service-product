@@ -15,6 +15,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -34,6 +35,7 @@ public class ProductApplication {
 
     private DynamoDBMapper dynamoDBMapper;
 
+    @PreAuthorize("#oauth2.hasScope('member.admin member.user')")
     @GetMapping("/products")
     public Flux<Product> products(){
 
@@ -41,6 +43,7 @@ public class ProductApplication {
 
     }
 
+    @PreAuthorize("#oauth2.hasScope('member.admin')")
     @PostMapping("/products")
     public Mono<Product> crateProducts(@RequestBody Product product){
 
@@ -48,6 +51,7 @@ public class ProductApplication {
 
     }
 
+    @PreAuthorize("#oauth2.hasScope('member.admin')")
     @PostMapping("/products/createWithArray")
     public String createArray(){
 
@@ -55,16 +59,19 @@ public class ProductApplication {
 
     }
 
+    @PreAuthorize("#oauth2.hasScope('member.admin member.user')")
     @GetMapping("/products/{productId}/{typeId}")
     public Mono<Product> getProduct(@PathVariable String productId, @PathVariable String typeId){
         return Mono.fromCompletionStage(productService.product(new ProductKey(productId, typeId)));
     }
 
+    @PreAuthorize("#oauth2.hasScope('member.admin')")
     @PutMapping("/products/{productId}/{typeId}")
     public Mono<Product> updateProduct(@PathVariable String productId, @PathVariable String typeId, @RequestBody Product product){
         return Mono.fromCompletionStage(productService.updateProduct(new ProductKey(productId, typeId), product));
     }
 
+    @PreAuthorize("#oauth2.hasScope('member.admin')")
     @DeleteMapping("/products/{productId}/{typeId}")
     public Flux<Product> deleteProduct(@PathVariable String productId, @PathVariable String typeId){
         return productService.deleteProduct(new ProductKey(productId, typeId));

@@ -29,8 +29,11 @@ security:
       clientSecret: 1a9030fbca47a5b2c28e92f19050bb77824b5ad1
       accessTokenUri: http://localhost:7000/oauth/access_token
       userAuthorizationUri: http://localhost:7000/oauth/authorize
-      scope: openid profile email
+      scope: member.user
     resource:
-      #userInfoUri: http://localhost:7000/user/me
-      tokenInfoUri: http://localhost:7000/introspect
-      preferTokenInfo: false
+      userInfoUri: http://localhost:7000/user/me
+      tokenInfoUri: http://localhost:7000/oauth/check_token
+      preferTokenInfo: true
+logging:
+  level:
+    org.springframework.security: debug
